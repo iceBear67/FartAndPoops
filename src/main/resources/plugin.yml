@@ -1,0 +1,4 @@
+name: FartAndPoops
+version: '${version}'
+main: io.ib67.fartandpoops.FartAndPoops
+api-version: 1.18
