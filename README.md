@@ -1,9 +1,7 @@
 # FartAndPoops
 在《我的世界》里尽情拉屎！  
 
-
-https://user-images.githubusercontent.com/48877375/185751634-bd03bd28-6122-47ef-9671-16fc5a7061b0.mp4
-
+[Video](./asset/vid.mp4)
 
 
 # Usage
