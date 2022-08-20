@@ -69,7 +69,9 @@ public final class FartAndPoops extends JavaPlugin implements FartAndPoopsAPI, L
     @EventHandler
     public void onMove(PlayerMoveEvent event){
         if(poopingPlayers.containsKey(event.getPlayer().getUniqueId())){
-            if(!isWaterLogged(event.getTo().getBlock())){
+            var block = event.getTo().getBlock();
+            var lowerBlock = block.getLocation().clone().add(0,-0.2F,0).getBlock();
+            if(!isWaterLogged(block) && !isWaterLogged(lowerBlock)){
                 poopingPlayers.remove(event.getPlayer().getUniqueId()).cancel();;
                 event.getPlayer().sendTitle(ChatColor.RED + "你跳了出来", "屎被你憋了回去", 10, 20, 10);
             }
@@ -78,16 +80,17 @@ public final class FartAndPoops extends JavaPlugin implements FartAndPoopsAPI, L
     @EventHandler
     public void onPlayerShift(PlayerToggleSneakEvent event) {
         if (event.isSneaking()) {
-            var block = event.getPlayer().getLocation().getBlock();
-            if (!isWaterLogged(block)) {
-                event.getPlayer().sendMessage(ChatColor.RED+"你只能在含水的方块或水中排泄！");
-                return;
-            }
             var fartPlayer = getFartPlayer(event.getPlayer());
             var delta = System.currentTimeMillis() - fartPlayer.getLastFartTime();
             var range = (1000 * 1000) * fartPlayer.getPoopTolerance(); // chance * 1000 seconds
             if (delta - range >= 0) {
                 // can fart
+                var block = event.getPlayer().getLocation().getBlock();
+                var lowerBlock = block.getLocation().clone().add(0,-0.2F,0).getBlock();
+                if (!isWaterLogged(block) && !isWaterLogged(lowerBlock)) {
+                    event.getPlayer().sendMessage(ChatColor.RED+"你只能在含水的方块或水中排泄！");
+                    return;
+                }
                 var task = Bukkit.getScheduler().runTaskLater(this, () -> {
                     fartPlayer.doFartOrPoop(false);
                     event.getPlayer().sendMessage(ChatColor.GRAY + "噢......你拉了出来，感觉舒服多了。");
@@ -102,7 +105,7 @@ public final class FartAndPoops extends JavaPlugin implements FartAndPoopsAPI, L
         }
     }
     private static final boolean isWaterLogged(Block block){
-        return block.getType() == Material.WATER || (block instanceof Waterlogged wBlock && wBlock.isWaterlogged());
+        return block.getType() == Material.WATER || (block.getBlockData() instanceof Waterlogged wBlock && wBlock.isWaterlogged());
     }
     @Override
     public Map<UUID, BukkitTask> getFartingPlayers() {
