@@ -4,6 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.Waterlogged;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -64,10 +66,23 @@ public final class FartAndPoops extends JavaPlugin implements FartAndPoopsAPI, L
     public void onPlayerJoin(PlayerJoinEvent event) {
         getFartPlayer(event.getPlayer()); // initialize
     }
-
+    @EventHandler
+    public void onMove(PlayerMoveEvent event){
+        if(poopingPlayers.containsKey(event.getPlayer().getUniqueId())){
+            if(!isWaterLogged(event.getTo().getBlock())){
+                poopingPlayers.remove(event.getPlayer().getUniqueId()).cancel();;
+                event.getPlayer().sendTitle(ChatColor.RED + "你跳了出来", "屎被你憋了回去", 10, 20, 10);
+            }
+        }
+    }
     @EventHandler
     public void onPlayerShift(PlayerToggleSneakEvent event) {
         if (event.isSneaking()) {
+            var block = event.getPlayer().getLocation().getBlock();
+            if (!isWaterLogged(block)) {
+                event.getPlayer().sendMessage(ChatColor.RED+"你只能在含水的方块或水中排泄！");
+                return;
+            }
             var fartPlayer = getFartPlayer(event.getPlayer());
             var delta = System.currentTimeMillis() - fartPlayer.getLastFartTime();
             var range = (1000 * 1000) * fartPlayer.getPoopTolerance(); // chance * 1000 seconds
@@ -86,7 +101,9 @@ public final class FartAndPoops extends JavaPlugin implements FartAndPoopsAPI, L
             poopingPlayers.remove(event.getPlayer().getUniqueId()).cancel();
         }
     }
-
+    private static final boolean isWaterLogged(Block block){
+        return block.getType() == Material.WATER || (block instanceof Waterlogged wBlock && wBlock.isWaterlogged());
+    }
     @Override
     public Map<UUID, BukkitTask> getFartingPlayers() {
         return poopingPlayers;
