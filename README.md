@@ -1,6 +1,6 @@
 # FartAndPoops
 在《我的世界》里尽情拉屎！  
-![video](./asset/vid.mp4)
+[在我的世界里拉屎是一种什么样的感受？](https://www.bilibili.com/video/BV1rd4y1w7Qd/)
 
 # Usage
 没有设置任何命令和配置文件
