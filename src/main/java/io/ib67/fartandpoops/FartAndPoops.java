@@ -1,5 +1,6 @@
 package io.ib67.fartandpoops;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -26,10 +27,12 @@ public final class FartAndPoops extends JavaPlugin implements FartAndPoopsAPI, L
     private final FartPlayerFactory factory = new FartPlayerFactory(lastFartKey);
 
     private final Map<UUID, BukkitTask> poopingPlayers = new HashMap<>();
+    private Metrics metrics;
 
     @Override
     public void onEnable() {
         // Plugin startup logic
+        new Metrics(this,16205);
         getServer().getPluginManager().registerEvents(this, this);
         new FartReminderTask().runTaskTimer(this, 0, 20);
     }
