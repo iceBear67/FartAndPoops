@@ -1,6 +1,10 @@
 # FartAndPoops
 在《我的世界》里尽情拉屎！  
-![video](./asset/vid.mp4)
+
+
+https://user-images.githubusercontent.com/48877375/185751634-bd03bd28-6122-47ef-9671-16fc5a7061b0.mp4
+
+
 
 # Usage
 没有设置任何命令和配置文件
